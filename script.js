@@ -1,22 +1,43 @@
-class Countries {
-  portugalUrl = "https://restcountries.com/v3.1/name/portugal";
-  countries = [];
+"use strict";
 
-  async fetch() {
-    const response = await fetch(this.portugalUrl);
-    const [data] = await response.json();
-    this.countries.push(data);
-    this.logData();
+class CountriesDOM {
+  constructor() {
+    this.api = new CountriesAPI();
   }
 
-  logData() {
-    console.log(this.countries[0].name.common); // name
-    console.log(this.countries[0].currencies.EUR.name); // currency
-    console.log(this.countries[0].region); // where it belongs
-    console.log(this.countries[0].languages.por); // spoken language
-    console.log(this.countries[0].population); // people
-    console.log(this.countries[0].flags.svg); // icon
+  selectors() {
+    return {
+      countriesContainer: document.querySelector(".countries"),
+    };
+  }
+
+  async add(countryName) {
+    const data = await this.api.fetch(countryName);
+
+    const html = `
+    <article class="country">
+      <img class="country__img" src="${data.flags.svg}" />
+      <div class="country__data">
+        <h3 class="country__name">${data.name.common}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>🧑‍🤝‍🧑</span>${data.population}</p>
+        <p class="country__row"><span>🗣️</span>${data.languages.por}</p>
+        <p class="country__row"><span>🪙</span>${data.currencies.EUR.name}</p>
+      </div>
+    </article>`;
+
+    this.selectors().countriesContainer.insertAdjacentHTML("beforeend", html);
   }
 }
-const countries = new Countries();
-countries.fetch();
+class CountriesAPI {
+  mainUrl = "https://restcountries.com/v3.1/name";
+
+  async fetch(country) {
+    const response = await fetch(`${this.mainUrl}/${country}`);
+    const [data] = await response.json();
+    return data;
+  }
+}
+
+const countries = new CountriesDOM();
+countries.add("portugal");
