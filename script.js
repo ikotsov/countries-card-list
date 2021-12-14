@@ -8,6 +8,8 @@ class CountriesDOM {
   async add(countryName) {
     const data = await this.api.fetch(countryName);
 
+    const languageCode = this.getLanguageCode(countryName);
+
     const html = `
     <article class="country">
       <img class="country__img" src="${data.flags.svg}" />
@@ -17,7 +19,9 @@ class CountriesDOM {
         <p class="country__info"><span>🧑‍🤝‍🧑</span>${this.formatPopulation(
           data.population
         )}</p>
-        <p class="country__info"><span>🗣️</span>${data.languages.por}</p>
+        <p class="country__info"><span>🗣️</span>${
+          data.languages[languageCode]
+        }</p>
         <p class="country__info"><span>🪙</span>${data.currencies.EUR.name}</p>
       </div>
     </article>`;
@@ -27,6 +31,11 @@ class CountriesDOM {
 
   formatPopulation(population) {
     return `${(population / 1000000).toFixed(1)} M`;
+  }
+
+  getLanguageCode(country) {
+    if (typeof country !== "string") return;
+    return country.toLowerCase().substring(0, 3);
   }
 
   selectors() {
@@ -41,9 +50,11 @@ class CountriesAPI {
   async fetch(country) {
     const response = await fetch(`${this.mainUrl}/${country}`);
     const [data] = await response.json();
+    console.log(data);
     return data;
   }
 }
 
 const countries = new CountriesDOM();
 countries.add("portugal");
+countries.add("spain");
