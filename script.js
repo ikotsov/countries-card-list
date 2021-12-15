@@ -62,8 +62,12 @@ class CountriesAPI {
   }
 }
 
-const countries = new CountriesDOM();
-countries.add("Portugal");
-countries.add("Spain");
-countries.add("France");
-countries.add("Germany");
+const addCountries = async () => {
+  const countries = new CountriesDOM();
+  await countries.add("Portugal");
+  await countries.add("Spain");
+  await countries.add("France");
+  await countries.add("Germany");
+};
+
+addCountries();
