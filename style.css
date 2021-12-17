@@ -1,0 +1,61 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  min-height: 100vh;
+  padding: 1rem;
+  color: #555;
+  background-color: #f7f7f7;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.countries {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.country {
+  background-color: #fff;
+  font-size: 1.8rem;
+  border-radius: 0.7rem;
+  margin: 0 3rem 5rem;
+}
+
+.country__img {
+  width: 35rem;
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
+}
+
+.country__data {
+  padding: 1rem 2rem;
+}
+
+.country__name {
+  font-size: 3rem;
+}
+
+.country__region {
+  margin-bottom: 1.7rem;
+}
+
+.country__info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-size: 2rem;
+}
+
+.country__info span {
+  margin-right: 1rem;
+  font-size: 2.5rem;
+}
