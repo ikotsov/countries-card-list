@@ -3,6 +3,11 @@
   --black-color: #000;
 
   --main-bg-color: #f7f7f7;
+
+  --main-font: "Oswald", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --heading-font: "Poppins", "Times New Roman", Times, serif;
+  --sub-heading-font: "Oooh Baby", "Gill Sans", "Gill Sans MT", Calibri,
+    "Trebuchet MS", sans-serif;
 }
 
 * {
@@ -21,7 +26,7 @@ body {
   padding: 1rem;
   color: var(--black-color);
   background-color: var(--main-bg-color);
-  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-family: var(--main-font);
 }
 
 .countries {
@@ -48,11 +53,13 @@ body {
 }
 
 .country__name {
+  font-family: var(--heading-font);
   font-size: 3rem;
 }
 
 .country__region {
   margin-bottom: 1.7rem;
+  font-family: var(--sub-heading-font);
 }
 
 .country__info {
