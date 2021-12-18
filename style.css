@@ -43,7 +43,7 @@ body {
 }
 
 .country__img {
-  width: 35rem;
+  height: 18rem;
   border-top-left-radius: 0.7rem;
   border-top-right-radius: 0.7rem;
 }
