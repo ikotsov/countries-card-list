@@ -1,4 +1,7 @@
 :root {
+  --primary-color: #ff7800;
+  --secondary-color: #ffbc97;
+
   --white-color: #fff;
   --black-color: #000;
 
@@ -29,6 +32,25 @@ body {
   font-family: var(--main-font);
 }
 
+.btn {
+  border: none;
+  font-size: 2rem;
+  padding: 2rem 5rem;
+  border-radius: 0.7rem;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.btn-country {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+}
+
 .countries {
   display: flex;
   flex-wrap: wrap;
@@ -54,7 +76,7 @@ body {
 
 .country__name {
   font-family: var(--heading-font);
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 .country__region {

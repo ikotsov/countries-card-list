@@ -3,10 +3,10 @@
 class CountriesDOM {
   constructor() {
     this.utils = new CountriesUtils();
-    this.api = new CountriesAPI();
+    this.api = new CountriesService();
   }
 
-  async add(countryName) {
+  async renderCountry(countryName) {
     const data = await this.api.fetch(countryName);
 
     const languageCode = this.utils.languageCode[countryName];
@@ -33,6 +33,7 @@ class CountriesDOM {
   selectors() {
     return {
       countriesContainer: document.querySelector(".countries"),
+      fetchCountriesBtn: document.querySelector(".btn-country"),
     };
   }
 }
@@ -51,7 +52,7 @@ class CountriesUtils {
   }
 }
 
-class CountriesAPI {
+class CountriesService {
   mainUrl = "https://restcountries.com/v3.1/name";
 
   async fetch(country) {
@@ -62,12 +63,10 @@ class CountriesAPI {
   }
 }
 
-const addCountries = async () => {
-  const countries = new CountriesDOM();
-  await countries.add("Portugal");
-  await countries.add("Spain");
-  await countries.add("France");
-  await countries.add("Germany");
-};
-
-addCountries();
+const dom = new CountriesDOM();
+dom.selectors().fetchCountriesBtn.addEventListener('click', () => {
+  dom.renderCountry("Portugal");
+  dom.renderCountry("Spain");
+  dom.renderCountry("France");
+  dom.renderCountry("Germany");
+})
