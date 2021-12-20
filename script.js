@@ -6,26 +6,44 @@ class CountriesDOM {
     this.api = new CountriesService();
   }
 
-  async renderCountry(countryName) {
-    const data = await this.api.fetch(countryName);
+  async fetchAndRenderCountry(countryName) {
+    try {
+      const data = await this.api.fetch(countryName);
 
-    const languageCode = this.utils.languageCode[countryName];
+      if (data?.status === 404) throw new Error(data.message);
+
+      this.renderCountry(data);
+    } catch (error) {
+      this.renderError(error.message);
+    }
+  }
+
+  async renderCountry(country) {
+    const languageCode = this.utils.languageCode[country.name.common];
 
     const html = `
-    <article class="country">
-      <img class="country__img" src="${data.flags.svg}" />
-      <div class="country__data">
-        <h3 class="country__name">${data.name.common}</h3>
-        <h4 class="country__region">${data.region}</h4>
-        <p class="country__info"><span>🧑‍🤝‍🧑</span>${this.utils.formatPopulation(
-          data.population
-        )}</p>
-        <p class="country__info"><span>🗣️</span>${
-          data.languages[languageCode]
-        }</p>
-        <p class="country__info"><span>🪙</span>${data.currencies.EUR.name}</p>
-      </div>
-    </article>`;
+      <article class="country">
+        <img class="country__img" src="${country.flags.svg}" />
+        <div class="country__data">
+          <h3 class="country__name">${country.name.common}</h3>
+          <h4 class="country__region">${country.region}</h4>
+          <p class="country__info"><span>🧑‍🤝‍🧑</span>${this.utils.formatPopulation(
+            country.population
+          )}</p>
+          <p class="country__info"><span>🗣️</span>${
+            country.languages[languageCode]
+          }</p>
+          <p class="country__info"><span>🪙</span>${
+            country.currencies.EUR.name
+          }</p>
+        </div>
+      </article>`;
+
+    this.selectors().countriesContainer.insertAdjacentHTML("beforeend", html);
+  }
+
+  renderError(message) {
+    const html = `<p class="error-text">${message}</p>`;
 
     this.selectors().countriesContainer.insertAdjacentHTML("beforeend", html);
   }
@@ -57,16 +75,19 @@ class CountriesService {
 
   async fetch(country) {
     const response = await fetch(`${this.mainUrl}/${country}`);
-    const [data] = await response.json();
-    console.log(data);
+    if (response.ok) {
+      const [data] = await response.json();
+      return data;
+    }
+    const data = await response.json();
     return data;
   }
 }
 
 const dom = new CountriesDOM();
-dom.selectors().fetchCountriesBtn.addEventListener('click', () => {
-  dom.renderCountry("Portugal");
-  dom.renderCountry("Spain");
-  dom.renderCountry("France");
-  dom.renderCountry("Germany");
-})
+dom.selectors().fetchCountriesBtn.addEventListener("click", () => {
+  dom.fetchAndRenderCountry("Portugal");
+  dom.fetchAndRenderCountry("Spain");
+  dom.fetchAndRenderCountry("France");
+  dom.fetchAndRenderCountry("Germany");
+});
