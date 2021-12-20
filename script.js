@@ -6,7 +6,7 @@ class CountriesDOM {
     this.api = new CountriesService();
   }
 
-  async fetchAndRenderCountry(countryName) {
+  async fetchAndRender(countryName) {
     try {
       const data = await this.api.fetch(countryName);
 
@@ -86,8 +86,8 @@ class CountriesService {
 
 const dom = new CountriesDOM();
 dom.selectors().fetchCountriesBtn.addEventListener("click", () => {
-  dom.fetchAndRenderCountry("Portugal");
-  dom.fetchAndRenderCountry("Spain");
-  dom.fetchAndRenderCountry("France");
-  dom.fetchAndRenderCountry("Germany");
+  dom.fetchAndRender("Portugal");
+  dom.fetchAndRender("Spain");
+  dom.fetchAndRender("France");
+  dom.fetchAndRender("Germany");
 });
