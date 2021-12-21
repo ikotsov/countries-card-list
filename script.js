@@ -3,12 +3,12 @@
 class CountriesDOM {
   constructor() {
     this.utils = new CountriesUtils();
-    this.api = new CountriesService();
+    this.countryApi = new CountriesService();
   }
 
   async fetchAndRender(countryName) {
     try {
-      const data = await this.api.fetch(countryName);
+      const data = await this.countryApi.fetch(countryName);
 
       if (data?.status === 404) throw new Error(data.message);
 
@@ -52,6 +52,7 @@ class CountriesDOM {
     return {
       countriesContainer: document.querySelector(".countries"),
       fetchCountriesBtn: document.querySelector(".btn-country"),
+      fetchCurrentCountryBtn: document.querySelector(".btn-whereami"),
     };
   }
 }
@@ -84,10 +85,30 @@ class CountriesService {
   }
 }
 
+class GeolocationService {
+  mainUrl = "https://geocode.xyz";
+
+  async fetch(lat, long) {
+    const response = await fetch(`${this.mainUrl}/${lat},${long}?geoit=json`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.country;
+    }
+  }
+}
+
 const dom = new CountriesDOM();
 dom.selectors().fetchCountriesBtn.addEventListener("click", () => {
   dom.fetchAndRender("Portugal");
   dom.fetchAndRender("Spain");
   dom.fetchAndRender("France");
   dom.fetchAndRender("Germany");
+});
+
+const LAT_OF_GREECE = 37.974851341029684;
+const LONG_OF_GREECE = 23.777171879171647;
+dom.selectors().fetchCurrentCountryBtn.addEventListener("click", async () => {
+  const locationApi = new GeolocationService();
+  const currentCountry = await locationApi.fetch(LAT_OF_GREECE, LONG_OF_GREECE);
+  dom.fetchAndRender(currentCountry);
 });
