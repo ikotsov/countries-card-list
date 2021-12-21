@@ -86,6 +86,16 @@ class CountriesService {
 }
 
 class GeolocationService {
+  constructor(domMutationApi) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const currentCountry = await this.fetch(
+        position.coords.latitude,
+        position.coords.longitude
+      );
+      domMutationApi.fetchAndRender(currentCountry);
+    });
+  }
+
   mainUrl = "https://geocode.xyz";
 
   async fetch(lat, long) {
@@ -105,10 +115,6 @@ dom.selectors().fetchCountriesBtn.addEventListener("click", () => {
   dom.fetchAndRender("Germany");
 });
 
-const LAT_OF_GREECE = 37.974851341029684;
-const LONG_OF_GREECE = 23.777171879171647;
 dom.selectors().fetchCurrentCountryBtn.addEventListener("click", async () => {
-  const locationApi = new GeolocationService();
-  const currentCountry = await locationApi.fetch(LAT_OF_GREECE, LONG_OF_GREECE);
-  dom.fetchAndRender(currentCountry);
+  new GeolocationService(dom);
 });
