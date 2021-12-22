@@ -18,7 +18,7 @@ class CountriesDOM {
     }
   }
 
-  async renderCountry(country) {
+  renderCountry(country) {
     const languageCode = this.utils.languageCode[country.name.common];
 
     const html = `
