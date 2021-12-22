@@ -107,14 +107,14 @@ class GeolocationService {
   }
 }
 
-const dom = new CountriesDOM();
-dom.selectors().fetchCountriesBtn.addEventListener("click", () => {
-  dom.fetchAndRender("Portugal");
-  dom.fetchAndRender("Spain");
-  dom.fetchAndRender("France");
-  dom.fetchAndRender("Germany");
+const domMutator = new CountriesDOM();
+domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
+  domMutator.fetchAndRender("Portugal");
+  domMutator.fetchAndRender("Spain");
+  domMutator.fetchAndRender("France");
+  domMutator.fetchAndRender("Germany");
 });
 
-dom.selectors().fetchCurrentCountryBtn.addEventListener("click", async () => {
-  new GeolocationService(dom);
+domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", async () => {
+  new GeolocationService(domMutator);
 });
