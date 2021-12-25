@@ -63,6 +63,7 @@ class CountriesUtils {
     France: "fra",
     Germany: "deu",
     Spain: "spa",
+    Greece: "ell",
   };
 
   formatPopulation(population) {
@@ -115,6 +116,6 @@ domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
   domMutator.fetchAndRender("Germany");
 });
 
-domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", async () => {
+domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", () => {
   new GeolocationService(domMutator);
 });
