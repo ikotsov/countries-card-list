@@ -15,6 +15,8 @@ class CountriesDOM {
       this.renderCountry(data);
     } catch (error) {
       this.renderError(error.message);
+    } finally {
+      this.selectors().countriesContainer.style.opacity = 1;
     }
   }
 
@@ -51,6 +53,7 @@ class CountriesDOM {
   selectors() {
     return {
       countriesContainer: document.querySelector(".countries"),
+      country: document.querySelector(".country"),
       fetchCountriesBtn: document.querySelector(".btn-country"),
       fetchCurrentCountryBtn: document.querySelector(".btn-whereami"),
     };
