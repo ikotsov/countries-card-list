@@ -50,10 +50,14 @@ class CountriesDOM {
     this.selectors().countriesContainer.insertAdjacentHTML("beforeend", html);
   }
 
+  clearContent() {
+    this.selectors().countriesContainer.innerHTML = "";
+    this.selectors().countriesContainer.style.opacity = 0;
+  }
+
   selectors() {
     return {
       countriesContainer: document.querySelector(".countries"),
-      country: document.querySelector(".country"),
       fetchCountriesBtn: document.querySelector(".btn-country"),
       fetchCurrentCountryBtn: document.querySelector(".btn-whereami"),
     };
@@ -113,6 +117,7 @@ class GeolocationService {
 
 const domMutator = new CountriesDOM();
 domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
+  domMutator.clearContent();
   domMutator.fetchAndRender("Portugal");
   domMutator.fetchAndRender("Spain");
   domMutator.fetchAndRender("France");
@@ -120,5 +125,6 @@ domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
 });
 
 domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", () => {
+  domMutator.clearContent();
   new GeolocationService(domMutator);
 });
