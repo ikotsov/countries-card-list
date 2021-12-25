@@ -23,10 +23,10 @@ class CountriesDOM {
   async fetchAndRenderCountries() {
     try {
       const data = await this.countriesApi.fetchCountries({
-        code1: "PT",
-        code2: "ES",
-        code3: "FR",
-        code4: "DE",
+        codeOne: "PT",
+        codeTwo: "ES",
+        codeThree: "FR",
+        codeFour: "DE",
       });
 
       data.map((c) => this.renderCountry(c));
@@ -126,9 +126,9 @@ class CountriesService {
   mainCountriesUrl = "https://restcountries.com/v3.1/alpha";
   mainCountryUrl = "https://restcountries.com/v3.1/name";
 
-  async fetchCountries({ code1, code2, code3, code4 }) {
+  async fetchCountries({ codeOne, codeTwo, codeThree, codeFour }) {
     const response = await fetch(
-      `${this.mainCountriesUrl}/?codes=${code1},${code2},${code3},${code4}`
+      `${this.mainCountriesUrl}/?codes=${codeOne},${codeTwo},${codeThree},${codeFour}`
     );
 
     const data = await response.json();
