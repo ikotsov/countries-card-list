@@ -53,7 +53,7 @@ class CountriesDOM {
 
   renderCountry(country) {
     const languageCode =
-      this.utils.languageCode[country.name.common] ?? undefined;
+      this.utils.langCodeMapper.get(country.name.common) ?? undefined;
 
     const html = `
       <article class="country">
@@ -108,13 +108,13 @@ class CountriesDOM {
 }
 
 class CountriesUtils {
-  languageCode = {
-    Portugal: "por",
-    France: "fra",
-    Germany: "deu",
-    Spain: "spa",
-    Greece: "ell",
-  };
+  langCodeMapper = new Map([
+    ["Portugal", "por"],
+    ["France", "fra"],
+    ["Germany", "deu"],
+    ["Spain", "spa"],
+    ["Greece", "ell"],
+  ]);
 
   formatPopulation(population) {
     if (typeof population !== "number") return;
