@@ -6,6 +6,20 @@ class CountriesDOM {
     this.countriesApi = new CountriesService();
   }
 
+  addBtnListener(btnElement, onClick) {
+    const that = this;
+    btnElement.addEventListener("click", async () => {
+      that.clearContent();
+      that.renderLoader();
+      btnElement.disabled = true;
+
+      await onClick();
+
+      that.removeLoader();
+      btnElement.disabled = false;
+    });
+  }
+
   async fetchAndRenderCountries() {
     try {
       const data = await this.countriesApi.fetchCountries({
@@ -165,25 +179,12 @@ const geoLocator = new GeolocationService();
 const domMutator = new CountriesDOM();
 
 const fetchCountriesBtn = domMutator.selectors().fetchCountriesBtn;
-fetchCountriesBtn.addEventListener("click", async () => {
-  domMutator.clearContent();
-  domMutator.renderLoader();
-  fetchCountriesBtn.disabled = true;
+domMutator.addBtnListener(
+  fetchCountriesBtn,
+  domMutator.fetchAndRenderCountries.bind(domMutator)
+);
 
-  await domMutator.fetchAndRenderCountries();
-
-  domMutator.removeLoader();
-  fetchCountriesBtn.disabled = false;
-});
-
-const fetchCurrentCountryBtn = domMutator.selectors().fetchCurrentCountryBtn;
-fetchCurrentCountryBtn.addEventListener("click", async () => {
-  domMutator.clearContent();
-  domMutator.renderLoader();
-  fetchCurrentCountryBtn.disabled = true;
-
+const fetchCurrentCountry = async () =>
   await domMutator.fetchAndRenderCountry(geoLocator.currentCountry);
-
-  domMutator.removeLoader();
-  fetchCurrentCountryBtn.disabled = false;
-});
+const fetchCurrentCountryBtn = domMutator.selectors().fetchCurrentCountryBtn;
+domMutator.addBtnListener(fetchCurrentCountryBtn, fetchCurrentCountry);
