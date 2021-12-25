@@ -67,6 +67,16 @@ class CountriesDOM {
     this.selectors().countriesContainer.insertAdjacentHTML("beforeend", html);
   }
 
+  renderLoader() {
+    const html = `<div class="loader"></div>`;
+
+    this.selectors().mainContainer.insertAdjacentHTML("beforeend", html);
+  }
+
+  removeLoader() {
+    document.querySelector(".loader").remove();
+  }
+
   clearContent() {
     this.selectors().countriesContainer.innerHTML = "";
     this.selectors().countriesContainer.style.opacity = 0;
@@ -74,6 +84,7 @@ class CountriesDOM {
 
   selectors() {
     return {
+      mainContainer: document.querySelector(".main"),
       countriesContainer: document.querySelector(".countries"),
       fetchCountriesBtn: document.querySelector(".btn-country"),
       fetchCurrentCountryBtn: document.querySelector(".btn-whereami"),
@@ -121,18 +132,25 @@ class CountriesService {
 }
 
 class GeolocationService {
-  constructor(domMutationApi) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const currentCountry = await this.fetch(
-        position.coords.latitude,
-        position.coords.longitude
-      );
-      domMutationApi.fetchAndRenderCountry(currentCountry);
-    });
+  constructor() {
+    this.run();
+  }
+
+  currentCountry = "";
+  run() {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const currentCountry = await this.fetch(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        this.currentCountry = currentCountry;
+      },
+      () => (this.currentCountry = undefined)
+    );
   }
 
   mainUrl = "https://geocode.xyz";
-
   async fetch(lat, long) {
     const response = await fetch(`${this.mainUrl}/${lat},${long}?geoit=json`);
     if (response.ok) {
@@ -142,13 +160,29 @@ class GeolocationService {
   }
 }
 
+const geoLocator = new GeolocationService();
 const domMutator = new CountriesDOM();
-domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
+
+const fetchCountriesBtn = domMutator.selectors().fetchCountriesBtn;
+fetchCountriesBtn.addEventListener("click", async () => {
   domMutator.clearContent();
-  domMutator.fetchAndRenderCountries();
+  domMutator.renderLoader();
+  fetchCountriesBtn.disabled = true;
+
+  await domMutator.fetchAndRenderCountries();
+
+  domMutator.removeLoader();
+  fetchCountriesBtn.disabled = false;
 });
 
-domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", () => {
+const fetchCurrentCountryBtn = domMutator.selectors().fetchCurrentCountryBtn;
+fetchCurrentCountryBtn.addEventListener("click", async () => {
   domMutator.clearContent();
-  new GeolocationService(domMutator);
+  domMutator.renderLoader();
+  fetchCurrentCountryBtn.disabled = true;
+
+  await domMutator.fetchAndRenderCountry(geoLocator.currentCountry);
+
+  domMutator.removeLoader();
+  fetchCurrentCountryBtn.disabled = false;
 });

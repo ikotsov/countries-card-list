@@ -56,6 +56,10 @@ body {
   box-shadow: none;
 }
 
+.btn:disabled {
+  background-color: var(--grey-color);
+}
+
 .header {
   display: flex;
   justify-content: center;
