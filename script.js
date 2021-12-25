@@ -101,8 +101,8 @@ class CountriesDOM {
     return {
       mainContainer: document.querySelector(".main"),
       countriesContainer: document.querySelector(".countries"),
-      fetchCountriesBtn: document.querySelector(".btn-country"),
-      fetchCurrentCountryBtn: document.querySelector(".btn-whereami"),
+      countriesBtn: document.querySelector(".btn-country"),
+      currentCountryBtn: document.querySelector(".btn-whereami"),
     };
   }
 }
@@ -178,13 +178,13 @@ class GeolocationService {
 const geoLocator = new GeolocationService();
 const domMutator = new CountriesDOM();
 
-const fetchCountriesBtn = domMutator.selectors().fetchCountriesBtn;
+const countriesBtn = domMutator.selectors().countriesBtn;
 domMutator.addBtnListener(
-  fetchCountriesBtn,
+  countriesBtn,
   domMutator.fetchAndRenderCountries.bind(domMutator)
 );
 
 const fetchCurrentCountry = async () =>
   await domMutator.fetchAndRenderCountry(geoLocator.currentCountry);
-const fetchCurrentCountryBtn = domMutator.selectors().fetchCurrentCountryBtn;
-domMutator.addBtnListener(fetchCurrentCountryBtn, fetchCurrentCountry);
+const currentCountryBtn = domMutator.selectors().currentCountryBtn;
+domMutator.addBtnListener(currentCountryBtn, fetchCurrentCountry);
