@@ -3,12 +3,29 @@
 class CountriesDOM {
   constructor() {
     this.utils = new CountriesUtils();
-    this.countryApi = new CountriesService();
+    this.countriesApi = new CountriesService();
   }
 
-  async fetchAndRender(countryName) {
+  async fetchAndRenderCountries() {
     try {
-      const data = await this.countryApi.fetch(countryName);
+      const data = await this.countriesApi.fetchCountries({
+        code1: "PT",
+        code2: "ES",
+        code3: "FR",
+        code4: "DE",
+      });
+
+      data.map((c) => this.renderCountry(c));
+    } catch (error) {
+      this.renderError(error.message);
+    } finally {
+      this.selectors().countriesContainer.style.opacity = 1;
+    }
+  }
+
+  async fetchAndRenderCountry(countryName) {
+    try {
+      const data = await this.countriesApi.fetchCountry(countryName);
 
       if (data?.status === 404) throw new Error(data.message);
 
@@ -80,10 +97,20 @@ class CountriesUtils {
 }
 
 class CountriesService {
-  mainUrl = "https://restcountries.com/v3.1/name";
+  mainCountriesUrl = "https://restcountries.com/v3.1/alpha";
+  mainCountryUrl = "https://restcountries.com/v3.1/name";
 
-  async fetch(country) {
-    const response = await fetch(`${this.mainUrl}/${country}`);
+  async fetchCountries({ code1, code2, code3, code4 }) {
+    const response = await fetch(
+      `${this.mainCountriesUrl}/?codes=${code1},${code2},${code3},${code4}`
+    );
+
+    const data = await response.json();
+    return data;
+  }
+
+  async fetchCountry(countryName) {
+    const response = await fetch(`${this.mainCountryUrl}/${countryName}`);
     if (response.ok) {
       const [data] = await response.json();
       return data;
@@ -100,7 +127,7 @@ class GeolocationService {
         position.coords.latitude,
         position.coords.longitude
       );
-      domMutationApi.fetchAndRender(currentCountry);
+      domMutationApi.fetchAndRenderCountry(currentCountry);
     });
   }
 
@@ -118,10 +145,7 @@ class GeolocationService {
 const domMutator = new CountriesDOM();
 domMutator.selectors().fetchCountriesBtn.addEventListener("click", () => {
   domMutator.clearContent();
-  domMutator.fetchAndRender("Portugal");
-  domMutator.fetchAndRender("Spain");
-  domMutator.fetchAndRender("France");
-  domMutator.fetchAndRender("Germany");
+  domMutator.fetchAndRenderCountries();
 });
 
 domMutator.selectors().fetchCurrentCountryBtn.addEventListener("click", () => {
