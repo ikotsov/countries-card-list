@@ -38,7 +38,8 @@ class CountriesDOM {
   }
 
   renderCountry(country) {
-    const languageCode = this.utils.languageCode[country.name.common];
+    const languageCode =
+      this.utils.languageCode[country.name.common] ?? undefined;
 
     const html = `
       <article class="country">
@@ -50,7 +51,7 @@ class CountriesDOM {
             country.population
           )}</p>
           <p class="country__info"><span>🗣️</span>${
-            country.languages[languageCode]
+            country.languages[languageCode] ?? "Not defined"
           }</p>
           <p class="country__info"><span>🪙</span>${
             country.currencies.EUR.name
