@@ -167,11 +167,11 @@ const onClickCountries = async () => {
 domMutator.addBtnListener(countriesBtn, onClickCountries);
 
 const currentCountryBtn = domMutator.selectors().currentCountryBtn;
-const onClickMyLocation = async () => {
+const onClickCurrentCountry = async () => {
   const data = await service.fetchCountry(geoLocator.currentCountry);
 
   if (data?.status === 404) throw new Error(data.message);
 
   domMutator.renderCountry(data);
 };
-domMutator.addBtnListener(currentCountryBtn, onClickMyLocation);
+domMutator.addBtnListener(currentCountryBtn, onClickCurrentCountry);
