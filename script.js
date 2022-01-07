@@ -3,52 +3,26 @@
 class CountriesDOM {
   constructor() {
     this.utils = new CountriesUtils();
-    this.countriesApi = new CountriesService();
   }
 
-  addBtnListener(btnElement, onClick) {
+  addBtnListener(btnElement, onClickAsync) {
     const that = this;
     btnElement.addEventListener("click", async () => {
       that.clearContent();
       that.renderLoader();
       btnElement.disabled = true;
 
-      await onClick();
+      try {
+        await onClickAsync();
+      } catch (error) {
+        this.renderError(error.message);
+      } finally {
+        this.selectors().countriesContainer.style.opacity = 1;
+      }
 
       that.removeLoader();
       btnElement.disabled = false;
     });
-  }
-
-  async fetchAndRenderCountries() {
-    try {
-      const data = await this.countriesApi.fetchCountries({
-        codeOne: "PT",
-        codeTwo: "ES",
-        codeThree: "FR",
-        codeFour: "DE",
-      });
-
-      data.map((c) => this.renderCountry(c));
-    } catch (error) {
-      this.renderError(error.message);
-    } finally {
-      this.selectors().countriesContainer.style.opacity = 1;
-    }
-  }
-
-  async fetchAndRenderCountry(countryName) {
-    try {
-      const data = await this.countriesApi.fetchCountry(countryName);
-
-      if (data?.status === 404) throw new Error(data.message);
-
-      this.renderCountry(data);
-    } catch (error) {
-      this.renderError(error.message);
-    } finally {
-      this.selectors().countriesContainer.style.opacity = 1;
-    }
   }
 
   renderCountry(country) {
@@ -177,14 +151,27 @@ class GeolocationService {
 
 const geoLocator = new GeolocationService();
 const domMutator = new CountriesDOM();
+const service = new CountriesService();
 
 const countriesBtn = domMutator.selectors().countriesBtn;
-domMutator.addBtnListener(
-  countriesBtn,
-  domMutator.fetchAndRenderCountries.bind(domMutator)
-);
+const onClickCountries = async () => {
+  const data = await service.fetchCountries({
+    codeOne: "PT",
+    codeTwo: "ES",
+    codeThree: "FR",
+    codeFour: "DE",
+  });
 
-const fetchCurrentCountry = async () =>
-  await domMutator.fetchAndRenderCountry(geoLocator.currentCountry);
+  data.map((c) => domMutator.renderCountry(c));
+};
+domMutator.addBtnListener(countriesBtn, onClickCountries);
+
 const currentCountryBtn = domMutator.selectors().currentCountryBtn;
-domMutator.addBtnListener(currentCountryBtn, fetchCurrentCountry);
+const onClickMyLocation = async () => {
+  const data = await service.fetchCountry(geoLocator.currentCountry);
+
+  if (data?.status === 404) throw new Error(data.message);
+
+  domMutator.renderCountry(data);
+};
+domMutator.addBtnListener(currentCountryBtn, onClickMyLocation);
