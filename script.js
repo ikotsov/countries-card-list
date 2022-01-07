@@ -115,7 +115,10 @@ class CountriesService {
       const [data] = await response.json();
       return data;
     }
+  
     const data = await response.json();
+    if (response.status === 404) throw new Error(data.message);
+
     return data;
   }
 }
@@ -169,8 +172,6 @@ domMutator.addBtnListener(countriesBtn, onClickCountries);
 const currentCountryBtn = domMutator.selectors().currentCountryBtn;
 const onClickCurrentCountry = async () => {
   const data = await service.fetchCountry(geoLocator.currentCountry);
-
-  if (data?.status === 404) throw new Error(data.message);
 
   domMutator.renderCountry(data);
 };
